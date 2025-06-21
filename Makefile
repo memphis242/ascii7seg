@@ -578,7 +578,9 @@ COMPILER_WARNINGS_TEST_FILES = \
     -Wno-maybe-uninitialized
 
 # Consider -Wmismatched-dealloc
-COMPILER_SANITIZERS = -fsanitize=bool -fsanitize=undefined -fsanitize-trap
+COMPILER_SANITIZERS = \
+    -fsanitize=undefined -fsanitize-trap \
+    -fsanitize=enum  -fsanitize=bool -fsanitize=bounds
 COMPILER_OPTIMIZATION_LEVEL_DEBUG = -Og -g3
 COMPILER_OPTIMIZATION_LEVEL_SPEED = -O3
 COMPILER_OPTIMIZATION_LEVEL_SPACE = -Os
@@ -640,7 +642,7 @@ endif
 # Compile up linker flags
 LDFLAGS += $(DIAGNOSTIC_FLAGS)
 ifneq ($(strip $(CROSS)),)
-  LDFLAGS += -Wl,--start-group -lc -lm -Wl,-Wl,--gc-sections,-Wl,-Map--end-group
+  LDFLAGS += -Wl,--start-group -lc -lm -Wl,-Wl,--gc-sections,-Wl,-Map--end-group # Need to think through link-time optimizations / garbage collection some more...
 endif
 ifeq ($(BUILD_TYPE), TEST)
    LDFLAGS += -lgcov --coverage
